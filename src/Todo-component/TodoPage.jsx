@@ -38,6 +38,13 @@ const TodoPage = () => {
     setTodos (newtodos);
 }
 
+    function ontododelete (id){
+        const newtodos = todos.filter(item => item.id != id )
+        setTodos (newtodos);
+    }
+
+    const emptystate = <h3>Nothing's Here , Add a ToDo </h3>
+
   return (
     <div>
         <h1>Super To-Do</h1>
@@ -49,11 +56,18 @@ const TodoPage = () => {
             />
             <button>Submit</button>
         </form>
-        <div>
+
+        {todos.length > 0 ? <div>
             {todos.map((item) => (
-                <Todoitem key={item.id} item={item} handletoggle={handletoggle} />
+                <Todoitem key={item.id} item={item} 
+                handletoggle={handletoggle}
+                ontododelete = {ontododelete}
+                />
             ))}
-        </div>
+        </div> 
+        : emptystate} 
+
+        
     </div>
   )
 }
