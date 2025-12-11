@@ -1,5 +1,7 @@
 import {useState} from 'react'
 import Todoitem from './Todoitem';
+import { Plus, Rabbit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 const TodoPage = () => {
 
@@ -8,7 +10,6 @@ const TodoPage = () => {
     const handlesubmit = (e) => {
         e.preventDefault();
         const todotext = e.target.todo.value
-        console.log(todotext)
 
         // todos.push(todotext); // not rerender component 
         // console.log(todos) // not rerender component
@@ -43,7 +44,11 @@ const TodoPage = () => {
         setTodos (newtodos);
     }
 
-    const emptystate = <h3>Nothing's Here , Add a ToDo </h3>
+    const emptystate = <div className='text-secondary flex flex-col items-center gap-4 mt-18'>
+        <Rabbit size={45}/>
+        <h3>Your ToDo's Are Empty </h3>
+
+    </div>
 
     const completedtodos= todos.filter(item => item.completed).length ;
 
@@ -66,6 +71,7 @@ const TodoPage = () => {
     }
 
     function handleUpdateTodoText (id , todotext ){
+        if(!todotext) return
         const newtodos = todos.map((item) => {
             if (item.id === id ){
                 return {...todos , text: todotext }
@@ -91,26 +97,42 @@ const TodoPage = () => {
 
 
     return (
-    <div>
-        <h1>Super To-Do</h1>
-        <form onSubmit={handlesubmit}>
+    <div className='max-w-2xl lg:p-12 p-10 space-y-6 mx-auto '>
+        <h1 className="text-center  font-display font-bold text-accent text-6xl">Super To-Do</h1>
+        <p className='text-center text-lg font-light text-secondary italic'>Manage Your ToDos With Ease!</p>
+        <form className="bg-gray-800 px-6 py-4 rounded-lg flex justify-between gap-4" onSubmit={handlesubmit}>
             <input 
             type="text" 
             name="todo"
+            required
             placeholder='Enter To Do Here...'
+            className='flex-1 font-body focus-outline-none'
             />
-            <button>Submit</button>
+            <button className='bg-accent text-black rounded-lg p-3 cursor-pointer hover:bg-accent-hover transition-colors ' type="submit">
+                <Plus />
+            </button>
         </form>
 
-        {!istodosorted &&
-            <button onClick={handlesorttodos}>Sort ToDos</button>}
+        <div className='flex justify-center gap-6 '>
+            {!istodosorted &&
+            <button
+            className='ring-2 px-4 py-2 rounded-lg ring-accent hover:bg-accent hover:text-black cursor-pointer '
+            onClick={handlesorttodos}>Sort ToDos</button>}
+            {!istodoEmpty &&
+            <button 
+            className='ring-2 px-4 py-2 rounded-lg ring-red-400 flex gap-2 hover:bg-red-400 hover:text-black cursor-pointer '
+            onClick={handledelete}> 
+            <Trash2 />
+            Delete All 
+            </button>}
+        </div>
         {!istodoEmpty &&
-            <button onClick={handledelete}>Delete All </button>}
-        {!istodoEmpty &&
-            <p>{completedtodos}/{todos.length} completed </p>}
+            <p
+            className='text-secondary text-right mt-10'
+            >{completedtodos}/{todos.length} completed </p>}
 
         {!istodoEmpty ? 
-        <div>
+        <div className='space-y-4 '>
             {todos.map((item , index) => (
                 <Todoitem key={item.id} item={item} 
                 handletoggle={handletoggle}
